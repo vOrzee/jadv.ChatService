@@ -6,7 +6,7 @@ import java.net.Socket;
 import static ru.netology.utils.Logger.logMessage;
 
 public class ChatClient {
-    private static final String SETTINGS_FILE = "./src/main/java/ru/netology/client/settings.txt";
+    private static final String SETTINGS_FILE = "settings_client.txt";
     private static String serverAddress = "127.0.0.1";
     private static int serverPort;
 
@@ -23,14 +23,13 @@ public class ChatClient {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            loadSettings();
-            Socket socket = new Socket(serverAddress, serverPort);
+    public void start() {
+        loadSettings();
+        try (Socket socket = new Socket(serverAddress, serverPort)) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-
             BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Клиент подключен к серверу на порту " + serverPort);
 
             Thread serverListener = new Thread(() -> {
                 String message;
@@ -61,6 +60,11 @@ public class ChatClient {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        ChatClient client = new ChatClient();
+        client.start();
     }
 }
 

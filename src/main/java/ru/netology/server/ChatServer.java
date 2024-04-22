@@ -6,13 +6,9 @@ import java.net.*;
 import static ru.netology.utils.Logger.logMessage;
 
 public class ChatServer {
-    private static final String SETTINGS_FILE = "./src/main/java/ru/netology/server/settings.txt";
+    private static final String SETTINGS_FILE = "settings.txt";
 
     private int port;
-
-    public ChatServer() {
-        loadSettings();
-    }
 
     protected ServerSocket createServerSocket(int port) throws IOException {
         return new ServerSocket(port);
@@ -30,6 +26,7 @@ public class ChatServer {
     }
 
     public void start() {
+        loadSettings();
         try (ServerSocket serverSocket = createServerSocket(port)) {
             if (serverSocket != null) {
                 System.out.println("Сервер запущен на порту " + port);
@@ -47,7 +44,8 @@ public class ChatServer {
 
 
     public static void main(String[] args) {
-        new ChatServer().start();
+        ChatServer server = new ChatServer();
+        server.start();
     }
 
 }
